@@ -2,7 +2,10 @@
     Research Analysis for NOAA Weather
     Copyright (C) 2017 Michael Garcia. All Rights Reserved.
     
-    Licensing Inquiries and Requests: mgar_datascience at protonmail.com
+    Licensing, pricing, permission inquiries, token to use source code 
+      contact mgar_datascience at protonmail.com. 
+    To submit your source code contribution 
+      contact  mgar_datascience at protonmail.com for token to repository.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published

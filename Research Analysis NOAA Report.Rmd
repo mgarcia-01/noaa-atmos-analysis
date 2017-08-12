@@ -1,9 +1,10 @@
 ---
 title: "Research Analysis for NOAA Weather"
 output:
+  html_notebook: default
+  html_document: default
   md_document:
     variant: markdown_github
-  html_document: default
 ---
 
 
@@ -40,6 +41,8 @@ You can also embed plots, for example:
 
 ```{r pressure, include = TRUE, echo=FALSE}
 as.table(summary(repdata))
+
+## rmarkdown::paged_table()
 ```
 
 ### Source Citation and Resource:
@@ -56,23 +59,27 @@ as.table(summary(repdata))
 
     
 ### License and Copyright Notice
-    ### License and Copyright Notice
-    Research Analysis for NOAA Weather
+    ### Default License and Copyright Notice
+    Self published Research Analysis for NOAA Weather
     Copyright (C) 2017 Michael Garcia. All Rights Reserved.
+    Unless otherwise noted, default copyright is excercised
+    and exclusive rights of the author. 
+    https://www.copyright.gov/title17/
     
-    Licensing Inquiries and Requests: mgar_datascience at protonmail.com
+    Source code from other authors, and only that source code,
+    retain their respective License. If any conflict overall;
+    the most permissive, copy-left license overrides project License.
+    Fees and permits by author, if any, still apply.
+    
+    Licensing, pricing, permission inquiries, token to use source code 
+      contact mgar_datascience at protonmail.com.
+    
+    To submit contributions required by permissive copy-left license,
+      contact mgar_datascience at protonmail.com for token to 
+      source repository.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as published
-    by the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    This program is distributed  WITHOUT ANY WARRANTY; without even the 
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+    PURPOSE.  
     
 ##

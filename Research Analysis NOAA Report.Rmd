@@ -39,7 +39,7 @@ repdata <- read.csv(destURL)
 You can also embed plots, for example:
 
 ```{r pressure, include = TRUE, echo=FALSE}
-summary(repdata)
+as.table(summary(repdata))
 ```
 
 ### Source Citation and Resource:

@@ -37,13 +37,25 @@ repdata <- read.csv(destURL)
 
 ##### Summary
 
-You can also embed plots, for example:
+Summary of Each Variable.
 
-```{r pressure, include = TRUE, echo=FALSE}
+```{r summary, include = TRUE, echo=FALSE}
 as.table(summary(repdata))
 
 ## rmarkdown::paged_table()
 ```
+
+##### Events most harmful to population health
+
+```{r include =  TRUE, echo = TRUE}
+eventFreq <- aggregate(repdata$EVTYPE, list(repdata$EVTYPE), length)
+names(eventFreq) <- c("EVTYPE","Qty")
+
+plot(eventFreq$EVTYPE,eventFreq$Qty,type ="h")
+```
+
+
+
 
 ### Source Citation and Resource:
     NATIONAL WEATHER SERVICE INSTRUCTION  10-1605 

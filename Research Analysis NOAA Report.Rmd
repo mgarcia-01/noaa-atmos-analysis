@@ -40,21 +40,35 @@ repdata <- read.csv(destURL)
 Summary of Each Variable.
 
 ```{r summary, include = TRUE, echo=FALSE}
-as.table(summary(repdata))
+#as.table(summary(repdata))
 
 ## rmarkdown::paged_table()
 ```
 
 ##### Events most harmful to population health
 
-```{r include =  TRUE, echo = TRUE}
+```{r event types,include =  TRUE, echo = TRUE}
 eventFreq <- aggregate(repdata$EVTYPE, list(repdata$EVTYPE), length)
 names(eventFreq) <- c("EVTYPE","Qty")
+eventFatal <- aggregate(repdata$FATALITIES, list(repdata$EVTYPE), sum)
+names(eventFatal) <- c("EVTYPE","FATALITIES")
+eventsInjur <- aggregate(repdata$INJURIES, list(repdata$EVTYPE), sum)
+names(eventsInjur) <- c("EVTYPE","INJURIES")
+#a <- eventFreq[order(eventFreq$Qty, decreasing = TRUE),]
+eventDamag <- merge(eventFreq,eventFatal, by.x = "EVTYPE", all = TRUE)
+eventDamag <- merge(eventDamag, eventsInjur, by.x = "EVTYPE", all = TRUE)
+eventDamag <- eventDamag[order(eventDamag$"Qty", decreasing = TRUE),]
 
-plot(eventFreq$EVTYPE,eventFreq$Qty,type ="h")
+#plot(eventFreq$EVTYPE,eventFreq$Qty,type ="h")
 ```
+This table shows the event types ordered by frequency. This depicts that the most frequent types `r eventDamag[1,2]` and `r eventDamag[2,2]` are not the most fatal or the most injuring.
 
 
+```{r event histogram,include =  TRUE, echo = TRUE}
+#a <- head(eventDamag[order(eventDamag$"Qty", decreasing = TRUE),],5)
+#plot(a$EVTYPE, as.numeric(a$Qty/1000), type = "h")
+
+```
 
 
 ### Source Citation and Resource:

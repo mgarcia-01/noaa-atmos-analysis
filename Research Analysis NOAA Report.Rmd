@@ -64,9 +64,32 @@ eventDamag <- eventDamag[order(eventDamag$"Qty", decreasing = TRUE),]
 This table shows the event types ordered by frequency. This depicts that the most frequent types `r eventDamag[1,2]` and `r eventDamag[2,2]` are not the most fatal or the most injuring.
 
 
+#####  Events have the greatest economic consequences
+
+
 ```{r event histogram,include =  TRUE, echo = TRUE}
 #a <- head(eventDamag[order(eventDamag$"Qty", decreasing = TRUE),],5)
 #plot(a$EVTYPE, as.numeric(a$Qty/1000), type = "h")
+#   “K” for thousands, “M” for millions, and “B” for billions
+#PROPDMG PROPDMGEXP CROPDMG CROPDMGEXP
+      # totaldmg doesnt work since the exp is different for prop and crop
+##totalDmg <- aggregate((repdata$PROPDMG+repdata$CROPDMG), list(repdata$EVTYPE,repdata$PROPDMGEXP), sum)
+##colnames(totalDmg) <- c("EVTYPE","TOTALEXP","TOTALDMG")
+propDmg <- aggregate(repdata$PROPDMG, list(repdata$EVTYPE,repdata$PROPDMGEXP), sum)
+colnames(propDmg) <- c("EVTYPE","EXP","PROPDMG")
+cropDmg <- aggregate(repdata$CROPDMG, list(repdata$EVTYPE,repdata$CROPDMGEXP), sum)
+colnames(cropDmg) <- c("EVTYPE","EXP","CROPDMG")
+eventDamagProp <- merge(eventDamag, propDmg,by.x = "EVTYPE", all = TRUE)
+eventDmgPrp <- merge(eventDamagProp, cropDmg,by = c("EVTYPE","EXP") , all = FALSE)
+e
+ventDmgPrp$TOTLDMG <- (eventDmgPrp$PROPDMG + eventDmgPrp$CROPDMG)
+
+# this is the Millions
+ a <- eventDmgPrp[which(eventDmgPrp$EXP == "M"),]
+ a[order(a$TOTLDMG, decreasing = TRUE),]
+#eventDmgPrp[which(eventDmgPrp$PROPDMG == max(eventDmgPrp$PROPDMG) ),]
+
+
 
 ```
 

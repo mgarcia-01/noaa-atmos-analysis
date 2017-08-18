@@ -75,18 +75,41 @@ This table shows the event types ordered by frequency. This depicts that the mos
       # totaldmg doesnt work since the exp is different for prop and crop
 ##totalDmg <- aggregate((repdata$PROPDMG+repdata$CROPDMG), list(repdata$EVTYPE,repdata$PROPDMGEXP), sum)
 ##colnames(totalDmg) <- c("EVTYPE","TOTALEXP","TOTALDMG")
-propDmg <- aggregate(repdata$PROPDMG, list(repdata$EVTYPE,repdata$PROPDMGEXP), sum)
+bil <- 1000000000
+mil <- 1000000
+thous <- 1000
+
+repDataConv <- repdata
+propDmg <- aggregate((ifelse(repdata$PROPDMGEXP == "B",repdata$PROPDMG*bil
+                             ,ifelse(repdata$PROPDMGEXP == "M",repdata$PROPDMG*mil
+                                     , ifelse(repdata$PROPDMGEXP == "K"
+                                              ,repdata$PROPDMG*thous
+                                              ,0
+                                              )
+                                     )
+                          )
+                      )
+                             , list(repdata$EVTYPE,repdata$PROPDMGEXP), sum)
 colnames(propDmg) <- c("EVTYPE","EXP","PROPDMG")
-cropDmg <- aggregate(repdata$CROPDMG, list(repdata$EVTYPE,repdata$CROPDMGEXP), sum)
+
+cropDmg <- aggregate((ifelse(repdata$CROPDMGEXP == "B",repdata$CROPDMG*bil
+                             ,ifelse(repdata$CROPDMGEXP == "M",repdata$CROPDMG*mil
+                                     , ifelse(repdata$CROPDMGEXP == "K",repdata$CROPDMG*thous
+                                              ,0
+                                              )
+                                     )
+                          )
+                      ), list(repdata$EVTYPE,repdata$CROPDMGEXP), sum)
 colnames(cropDmg) <- c("EVTYPE","EXP","CROPDMG")
+
 eventDamagProp <- merge(eventDamag, propDmg,by.x = "EVTYPE", all = TRUE)
 eventDmgPrp <- merge(eventDamagProp, cropDmg,by = c("EVTYPE","EXP") , all = FALSE)
-e
-ventDmgPrp$TOTLDMG <- (eventDmgPrp$PROPDMG + eventDmgPrp$CROPDMG)
+eventDmgPrp$TOTLDMG <- (eventDmgPrp$PROPDMG + eventDmgPrp$CROPDMG)
 
 # this is the Millions
- a <- eventDmgPrp[which(eventDmgPrp$EXP == "M"),]
- a[order(a$TOTLDMG, decreasing = TRUE),]
+ a <- eventDmgPrp[which(eventDmgPrp$EXP == "B"),]
+ head(a[order(a$TOTLDMG, decreasing = TRUE),],10)
+ 
 #eventDmgPrp[which(eventDmgPrp$PROPDMG == max(eventDmgPrp$PROPDMG) ),]
 
 

@@ -89,8 +89,11 @@ propDmg <- aggregate((ifelse(repdata$PROPDMGEXP == "B",repdata$PROPDMG*bil
                                      )
                           )
                       )
-                             , list(repdata$EVTYPE,repdata$PROPDMGEXP), sum)
-colnames(propDmg) <- c("EVTYPE","EXP","PROPDMG")
+                             , list(repdata$EVTYPE
+                                    #,repdata$PROPDMGEXP
+                                    ), sum)
+#colnames(propDmg) <- c("EVTYPE","EXP","PROPDMG")
+colnames(propDmg) <- c("EVTYPE","PROPDMG")
 
 cropDmg <- aggregate((ifelse(repdata$CROPDMGEXP == "B",repdata$CROPDMG*bil
                              ,ifelse(repdata$CROPDMGEXP == "M",repdata$CROPDMG*mil
@@ -99,17 +102,22 @@ cropDmg <- aggregate((ifelse(repdata$CROPDMGEXP == "B",repdata$CROPDMG*bil
                                               )
                                      )
                           )
-                      ), list(repdata$EVTYPE,repdata$CROPDMGEXP), sum)
-colnames(cropDmg) <- c("EVTYPE","EXP","CROPDMG")
+                      ), list(repdata$EVTYPE
+                              #,repdata$CROPDMGEXP
+                              ), sum)
+#colnames(cropDmg) <- c("EVTYPE","EXP","CROPDMG")
+colnames(cropDmg) <- c("EVTYPE","CROPDMG")
 
 eventDamagProp <- merge(eventDamag, propDmg,by.x = "EVTYPE", all = TRUE)
-eventDmgPrp <- merge(eventDamagProp, cropDmg,by = c("EVTYPE","EXP") , all = FALSE)
+eventDmgPrp <- merge(eventDamagProp, cropDmg,by.x = "EVTYPE", all = FALSE)
+                                                  #c("EVTYPE","EXP")
 eventDmgPrp$TOTLDMG <- (eventDmgPrp$PROPDMG + eventDmgPrp$CROPDMG)
 
 # this is the Millions
- a <- eventDmgPrp[which(eventDmgPrp$EXP == "B"),]
- head(a[order(a$TOTLDMG, decreasing = TRUE),],10)
- 
+ #a <- eventDmgPrp[which(eventDmgPrp$EXP == "B"),]
+# head(a[order(a$TOTLDMG, decreasing = TRUE),],10)
+ #head(eventDmgPrp[order(eventDmgPrp$TOTLDMG, decreasing = TRUE),],10)
+ eventDmgPrp[order(eventDmgPrp$TOTLDMG, decreasing = TRUE),]
 #eventDmgPrp[which(eventDmgPrp$PROPDMG == max(eventDmgPrp$PROPDMG) ),]
 
 

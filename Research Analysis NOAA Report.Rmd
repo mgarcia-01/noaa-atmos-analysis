@@ -25,7 +25,7 @@ The data was fetched from NOAA (see Citation for url). The source to pull proces
 
 ```{r Data Processing, include=TRUE, echo=TRUE}
 ### Week 1 Project ###
-library(data.table)
+#library(data.table)
 webURL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
 destURL <- file.path(getwd(),paste("repdata_data_StormData.csv",".bz2",sep = ""))
 download.file(webURL,destfile = destURL)
@@ -129,8 +129,12 @@ This table is sorted by the total property damage cost from most to least and re
 ```{r damageplot, include= TRUE, echo = TRUE}
 pl <- head(eventDmgPrp[order(eventDmgPrp$TOTLDMG, decreasing = TRUE),],10)
 pl$TOTLDMG <- as.numeric(pl$TOTLDMG)
-plot(pl$EVTYPE,(pl$TOTLDMG/1000), type = "h")
+pl$EVTYPE <- factor(pl$EVTYPE)
+#plot(pl$EVTYPE,(pl$TOTLDMG/1000), type = "h", xlab = "EVTYPE", ylab = "Total Damage Amount")
 
+library(ggplot2)
+ggplot(pl, aes(x=EVTYPE, y=TOTLDMG, group=1)) + geom_line()
+# plot(activityWkend$interval, activityWkend$avgSteps, type = "l",xlab = "interval", ylab = "WkEnd Avg Steps")
 ```
 
 ### Source Citation and Resource:

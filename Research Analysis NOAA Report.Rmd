@@ -133,7 +133,12 @@ pl$EVTYPE <- factor(pl$EVTYPE)
 #plot(pl$EVTYPE,(pl$TOTLDMG/1000), type = "h", xlab = "EVTYPE", ylab = "Total Damage Amount")
 
 library(ggplot2)
-ggplot(pl, aes(x=EVTYPE, y=TOTLDMG, group=1)) + geom_line()
+ggplot(pl, aes(x=format(EVTYPE, scientific = FALSE), y=(TOTLDMG), group=1)) + geom_bar(stat = "identity")+ 
+            theme(axis.text.x = element_text(angle = 45, hjust = 1)
+                               ,axis.title.x = element_text(face="bold", size=12)
+                               ,legend.position="none")+
+                                    labs(x="Event Type",y="Damage Amount (000's)") 
+                                    
 # plot(activityWkend$interval, activityWkend$avgSteps, type = "l",xlab = "interval", ylab = "WkEnd Avg Steps")
 ```
 

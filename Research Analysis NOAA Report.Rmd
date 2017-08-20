@@ -117,13 +117,16 @@ eventDmgPrp$TOTLDMG <- (eventDmgPrp$PROPDMG + eventDmgPrp$CROPDMG)
  #a <- eventDmgPrp[which(eventDmgPrp$EXP == "B"),]
 # head(a[order(a$TOTLDMG, decreasing = TRUE),],10)
  #head(eventDmgPrp[order(eventDmgPrp$TOTLDMG, decreasing = TRUE),],10)
- eventDmgPrp[order(eventDmgPrp$TOTLDMG, decreasing = TRUE),]
+eventDmgPrp$PROPDMG <- round(eventDmgPrp$PROPDMG/1000,1)
+eventDmgPrp$CROPDMG <- round(eventDmgPrp$CROPDMG/1000,1)
+eventDmgPrp$TOTLDMG <- round(eventDmgPrp$TOTLDMG/1000,1)
+eventDmgPrp[order(eventDmgPrp$TOTLDMG, decreasing = TRUE),]
 #eventDmgPrp[which(eventDmgPrp$PROPDMG == max(eventDmgPrp$PROPDMG) ),]
 
 
 
 ```
-
+This table is sorted by the total property damage cost from most to least. The values were converted to full dollar amount based on the EXP value.
 
 ### Source Citation and Resource:
     NATIONAL WEATHER SERVICE INSTRUCTION  10-1605 

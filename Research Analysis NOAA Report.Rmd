@@ -17,7 +17,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Main Report Section
 
 ##### Synopsis 
-This report utilizes NOAA storm weather data to explain weather patterns. The weather in research are disastrous conditions, and the attributes of the weather. The analysis will also deliver results on the events that directly may have resulted from the unusual weather. 
+This report utilizes NOAA storm weather data to explain weather patterns. The weather in research are disastrous conditions, and the attributes of the weather. The analysis will also deliver results on the events that directly may have resulted from the unusual weather. The analysis reveals that the most frequent events are not necessarily the most damaging. Events that are most economically costly, are not the events that cause the most damage to population health. 
+
+Tornadoe, Heat, and Flash Floods are the top  3 causes of most fatalities. Hail, thunderstorms windws and tornadoes are the top 3 most frequent. Flood, Hurricane, and tornadoes are the top 3 most costly events.
 
 ##### Data Processing
 
@@ -61,8 +63,33 @@ eventDamag <- eventDamag[order(eventDamag$"Qty", decreasing = TRUE),]
 eventDamag
 #plot(eventFreq$EVTYPE,eventFreq$Qty,type ="h")
 ```
-This table shows the event types ordered by frequency. This depicts that the most frequent types `r eventDamag[1,1]` at `r eventDamag[1,2]` and `r eventDamag[2,1]` at `r eventDamag[2,2]` are not the most fatal or the most injuring.  
+This table shows the event types ordered by frequency. This depicts that the most frequent types `r eventDamag[1,1]` at `r eventDamag[1,2]` and `r eventDamag[nrow(eventDamag),1]` at `r eventDamag[nrow(eventDamag),2]` are not the most frequent  
 
+```{r injury_fatalities, include= TRUE,echo= TRUE}
+ftl <- eventDamag[order(eventDamag$FATALITIES, decreasing = TRUE),]
+ftl
+
+```
+`r ftl[1,1]` event is the top event causing fatalities at `r ftl[1,3]` fatalities. `r ftl[nrow(ftl),1]` is the event with the least number of fatalities at `r ftl[nrow(ftl),3]`
+
+```{r ftl_plot, include=FALSE, echo=FALSE}
+tftl <- head(ftl[order(ftl$FATALITIES, decreasing = TRUE),],10)
+tftl$FATALITIES <- as.numeric(tftl$FATALITIES)
+tftl$EVTYPE <- factor(tftl$EVTYPE)
+#plot(pl$EVTYPE,(pl$TOTLDMG/1000), type = "h", xlab = "EVTYPE", ylab = "Total Damage Amount")
+
+library(ggplot2)
+ggplot(tftl, aes(x=reorder(EVTYPE, -FATALITIES), y=format(FATALITIES, scientific = FALSE), group=1)) + geom_bar(stat = "identity", fill = "#0099FF")+ 
+            theme(axis.text.x = element_text(angle = 45, hjust = 1)
+                               ,axis.title.x = element_text(face="bold", size=12)
+                               ,legend.position="none")+
+                                    labs(x="Event Type",y="FATALITIES") 
+```
+
+ 
+```{r include= FALSE, echo=FALSE}
+###  This bar graph displays the top 10 events that cause the most fatalities.
+```
 
 ```{r damageqty, include = TRUE, echo = TRUE}
 dm <- head(eventDamag[order(eventDamag$Qty, decreasing = TRUE),],10)
@@ -78,7 +105,6 @@ ggplot(dm, aes(x=reorder(EVTYPE, -Qty), y=format(Qty, scientific = FALSE), group
                                     labs(x="Event Type",y="Event Frequency") 
 ```
 This table displayes the top ten events that are most frequent. `r head(dm$EVTYPE,1)` is the event that occurs the most at `r format(head(dm$Qty,1), scientific = FALSE)` number of events. `r dm[10,1]` is the least top frequent occuring event coming at `r format(dm[10,2], scientific = FALSE)` number of events.
-
 
 
 
@@ -164,10 +190,6 @@ This chart shows the top 10 most economically damaging events, from most to leas
 
 
 
-
-
-
-
 ### Source Citation and Resource:
     NATIONAL WEATHER SERVICE INSTRUCTION  10-1605 
     AUGUST 17, 2007 
@@ -184,25 +206,6 @@ This chart shows the top 10 most economically damaging events, from most to leas
 ### License and Copyright Notice
     ### Default License and Copyright Notice
     Self published Research Analysis for NOAA Weather
-    Copyright (C) 2017 Michael Garcia. All Rights Reserved.
-    Unless otherwise noted, default copyright is excercised
-    and exclusive rights of the author. 
-    https://www.copyright.gov/title17/
-    
-    Source code from other authors, and only that source code,
-    retain their respective License. If any conflict overall;
-    the most permissive, copy-left license overrides project License.
-    Fees and permits by author, if any, still apply.
-    
-    Licensing, pricing, permission inquiries, token to use source code 
-      contact mgar_datascience at protonmail.com.
-    
-    To submit contributions required by permissive copy-left license,
-      contact mgar_datascience at protonmail.com for token to 
-      source repository.
-
-    This program is distributed  WITHOUT ANY WARRANTY; without even the 
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-    PURPOSE.  
+    Copyright © 2017 Michael Garcia. All Rights Reserved.
     
 ##

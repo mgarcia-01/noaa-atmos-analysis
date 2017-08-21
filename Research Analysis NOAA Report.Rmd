@@ -17,11 +17,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Main Report Section
 
 ##### Synopsis 
-This report utilizes NOAA storm weather data to explain weather patterns. The weather in research are disastrous conditions, and the attributes of the weather. The analysis will also deliver results on the events that directly may have resulted from the unusual weather.
+This report utilizes NOAA storm weather data to explain weather patterns. The weather in research are disastrous conditions, and the attributes of the weather. The analysis will also deliver results on the events that directly may have resulted from the unusual weather. 
 
 ##### Data Processing
 
-The data was fetched from NOAA (see Citation for url). The source to pull process and retain the data can be see in the code below.
+The data was fetched from NOAA (see Citation for url). The source to pull process and retain the data can be see in the code below. The code for data tables and graphcs is provided within the R Chunks. There are a few values within my statements that are inline R chunks. The RMD file will show which use inlince calculations.
 
 ```{r Data Processing, include=TRUE, echo=TRUE}
 ### Week 1 Project ###
@@ -58,10 +58,15 @@ names(eventsInjur) <- c("EVTYPE","INJURIES")
 eventDamag <- merge(eventFreq,eventFatal, by.x = "EVTYPE", all = TRUE)
 eventDamag <- merge(eventDamag, eventsInjur, by.x = "EVTYPE", all = TRUE)
 eventDamag <- eventDamag[order(eventDamag$"Qty", decreasing = TRUE),]
-
+eventDamag
 #plot(eventFreq$EVTYPE,eventFreq$Qty,type ="h")
 ```
-This table shows the event types ordered by frequency. This depicts that the most frequent types `r eventDamag[1,2]` and `r eventDamag[2,2]` are not the most fatal or the most injuring.
+This table shows the event types ordered by frequency. This depicts that the most frequent types `r eventDamag[1,1]` at `r eventDamag[1,2]` and `r eventDamag[2,1]` at `r eventDamag[2,2]` are not the most fatal or the most injuring.  
+
+
+
+
+
 
 
 #####  Events have the greatest economic consequences
@@ -133,7 +138,7 @@ pl$EVTYPE <- factor(pl$EVTYPE)
 #plot(pl$EVTYPE,(pl$TOTLDMG/1000), type = "h", xlab = "EVTYPE", ylab = "Total Damage Amount")
 
 library(ggplot2)
-ggplot(pl, aes(x=format(EVTYPE, scientific = FALSE), y=(TOTLDMG), group=1)) + geom_bar(stat = "identity")+ 
+ggplot(pl, aes(x=reorder(EVTYPE, -TOTLDMG), y=format(TOTLDMG, scientific = FALSE), group=1)) + geom_bar(stat = "identity", fill = "#0099FF")+ 
             theme(axis.text.x = element_text(angle = 45, hjust = 1)
                                ,axis.title.x = element_text(face="bold", size=12)
                                ,legend.position="none")+
@@ -141,6 +146,14 @@ ggplot(pl, aes(x=format(EVTYPE, scientific = FALSE), y=(TOTLDMG), group=1)) + ge
                                     
 # plot(activityWkend$interval, activityWkend$avgSteps, type = "l",xlab = "interval", ylab = "WkEnd Avg Steps")
 ```
+This chart shows the top 10 most economically damaging events, from most to least. The Flood is the most costly and the Ice Storm is the least.
+
+
+
+
+
+
+
 
 ### Source Citation and Resource:
     NATIONAL WEATHER SERVICE INSTRUCTION  10-1605 

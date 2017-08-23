@@ -1,4 +1,4 @@
----
+quit---
 title: "Research Analysis for NOAA Weather"
 output:
   html_notebook: default
@@ -23,7 +23,7 @@ Tornadoe, Heat, and Flash Floods are the top  3 causes of most fatalities. Hail,
 
 ##### Data Processing
 
-The data was fetched from NOAA (see Citation for url). The source to pull process and retain the data can be see in the code below. The code for data tables and graphcs is provided within the R Chunks. There are a few values within my statements that are inline R chunks. The RMD file will show which use inlince calculations.
+The data was fetched from NOAA (see Citation for url). The source to pull process and retain the data can be see in the code below. The code for data tables and graphcs is provided within the R Chunks. There are a few values within my statements that are inline R chunks. The RMD file will show which sentences  use inline calculations.
 
 ```{r Data Processing, include=TRUE, echo=TRUE}
 ### Week 1 Project ###
@@ -119,6 +119,7 @@ This table displayes the top ten events that are most frequent. `r head(dm$EVTYP
       # totaldmg doesnt work since the exp is different for prop and crop
 ##totalDmg <- aggregate((repdata$PROPDMG+repdata$CROPDMG), list(repdata$EVTYPE,repdata$PROPDMGEXP), sum)
 ##colnames(totalDmg) <- c("EVTYPE","TOTALEXP","TOTALDMG")
+# This chunk transforms the damage values into 
 bil <- 1000000000
 mil <- 1000000
 thous <- 1000
@@ -189,6 +190,13 @@ This chart shows the top 10 most economically damaging events, from most to leas
 
 
 
+```{r timeseries, include= TRUE, echo= TRUE}
+
+tmEvent <- repdata[which(is.na(repdata$BGN_DATE) == FALSE & is.na(repdata$END_DATE) == FALSE),]
+tmEvent <- aggregate(repdata$FATALITIES, list("BGN_DATE","END_DATE"), sum)      # repdata$BGN_DATE
+
+#activityIntMergeSum$date <-  as.Date(activityIntMergeSum$date,format = "%Y-%m-%d")
+```
 
 ### Source Citation and Resource:
     NATIONAL WEATHER SERVICE INSTRUCTION  10-1605 
@@ -204,8 +212,8 @@ This chart shows the top 10 most economically damaging events, from most to leas
 
     
 ### License and Copyright Notice
-    ### Default License and Copyright Notice
     Self published Research Analysis for NOAA Weather
     Copyright © 2017 Michael Garcia. All Rights Reserved.
+    Inquiries: mgar_datascience@protonmail.com
     
 ##

@@ -1,8 +1,7 @@
 ### Default License and Copyright Notice
-    Self published Research Analysis for NOAA Weather
-    Copyright (C) 2017 Michael Garcia. All Rights Reserved.
-    Unless otherwise noted, default copyright is excercised
-    and exclusive rights of the author. 
+    SSelf published Research Analysis for NOAA Weather
+    Copyright © 2017 Michael Garcia. All Rights Reserved.
+    Inquiries: mgar_datascience@protonmail.com 
     https://www.copyright.gov/title17/
     
     This program is distributed  WITHOUT ANY WARRANTY; without even the 

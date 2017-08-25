@@ -201,7 +201,7 @@ colnames(tmEventAg) <- c("BGN_DATE","FATALITIES")
 tmEventMean <- aggregate(tmEvent$FATALITIES, list(tmEvent$BGN_DATE), mean, na.rm = TRUE)      # repdata$BGN_DATE
 colnames(tmEventAg) <- c("BGN_DATE","FATALITIES")
 # tmEventAg <- tmEventAg[which(tmEventAg$BGN_DATE >= "1990-01-01"),]
-plot(tmEventAg$BGN_DATE,  (tmEventAg$FATALITIES), type = "b", xlab = "Event Date", ylab = "Fatalities")
+plot(tmEventAg$BGN_DATE,  (tmEventAg$FATALITIES), type = "h", xlab = "Event Date", ylab = "Fatalities")
 
 ```
 

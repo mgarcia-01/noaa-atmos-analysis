@@ -201,7 +201,16 @@ colnames(tmEventAg) <- c("BGN_DATE","FATALITIES")
 tmEventMean <- aggregate(tmEvent$FATALITIES, list(tmEvent$BGN_DATE), mean, na.rm = TRUE)      # repdata$BGN_DATE
 colnames(tmEventAg) <- c("BGN_DATE","FATALITIES")
 # tmEventAg <- tmEventAg[which(tmEventAg$BGN_DATE >= "1990-01-01"),]
-plot(tmEventAg$BGN_DATE,  (tmEventAg$FATALITIES), type = "h", xlab = "Event Date", ylab = "Fatalities")
+tmEventInj <- aggregate(tmEvent$INJURIES, list(tmEvent$BGN_DATE), sum, na.rm = TRUE) 
+colnames(tmEventInj) <- c("BGN_DATE","INJURIES")
+#plot(tmEventAg$BGN_DATE,  (tmEventAg$FATALITIES), type = "h", xlab = "Event Date", ylab = "Fatalities")
+
+  
+  par(mfrow=c(2,1))
+  #par(mfcol=c(2,1))
+  plot(tmEventAg$BGN_DATE,  (tmEventAg$FATALITIES), type = "h", xlab = "Event Date", ylab = "Fatalities")
+  plot(tmEventInj$BGN_DATE,  (tmEventInj$INJURIES), type = "h", xlab = "Event Date", ylab = "Injuries")
+mtext("Fatalities and Injuries", side=3, outer=TRUE, line=-1) 
 
 ```
 

@@ -99,7 +99,7 @@ dm$EVTYPE <- factor(dm$EVTYPE)
 #plot(pl$EVTYPE,(pl$TOTLDMG/1000), type = "h", xlab = "EVTYPE", ylab = "Total Damage Amount")
 
 library(ggplot2)
-ggplot(dm, aes(x=reorder(EVTYPE, -Qty), y=format(Qty, scientific = FALSE), group=1)) + geom_bar(stat = "identity", fill = "#0099FF")+ 
+g1 <- ggplot(dm, aes(x=reorder(EVTYPE, -Qty), y=format(Qty, scientific = FALSE), group=1)) + geom_bar(stat = "identity", fill = "#0099FF")+ 
             theme(axis.text.x = element_text(angle = 45, hjust = 1)
                                ,axis.title.x = element_text(face="bold", size=12)
                                ,legend.position="none")+
@@ -179,7 +179,7 @@ pl$EVTYPE <- factor(pl$EVTYPE)
 #plot(pl$EVTYPE,(pl$TOTLDMG/1000), type = "h", xlab = "EVTYPE", ylab = "Total Damage Amount")
 
 library(ggplot2)
-ggplot(pl, aes(x=reorder(EVTYPE, -TOTLDMG), y=format(TOTLDMG, scientific = FALSE), group=1)) + geom_bar(stat = "identity", fill = "#0099FF")+ 
+g2 <- ggplot(pl, aes(x=reorder(EVTYPE, -TOTLDMG), y=format(TOTLDMG, scientific = FALSE), group=1)) + geom_bar(stat = "identity", fill = "#0099FF")+ 
             theme(axis.text.x = element_text(angle = 45, hjust = 1)
                                ,axis.title.x = element_text(face="bold", size=12)
                                ,legend.position="none")+
@@ -188,8 +188,6 @@ ggplot(pl, aes(x=reorder(EVTYPE, -TOTLDMG), y=format(TOTLDMG, scientific = FALSE
 # plot(activityWkend$interval, activityWkend$avgSteps, type = "l",xlab = "interval", ylab = "WkEnd Avg Steps")
 ```
 This chart shows the top 10 most economically damaging events, from most to least. The Flood is the most costly and the Ice Storm is the least.
-
-
 
 ```{r timeseries, include= TRUE, echo= TRUE}
 
@@ -201,9 +199,58 @@ colnames(tmEventAg) <- c("BGN_DATE","FATALITIES")
 tmEventMean <- aggregate(tmEvent$FATALITIES, list(tmEvent$BGN_DATE), mean, na.rm = TRUE)      # repdata$BGN_DATE
 colnames(tmEventAg) <- c("BGN_DATE","FATALITIES")
 # tmEventAg <- tmEventAg[which(tmEventAg$BGN_DATE >= "1990-01-01"),]
-plot(tmEventAg$BGN_DATE,  (tmEventAg$FATALITIES), type = "b", xlab = "Event Date", ylab = "Fatalities")
+tmEventInj <- aggregate(tmEvent$INJURIES, list(tmEvent$BGN_DATE), sum, na.rm = TRUE) 
+colnames(tmEventInj) <- c("BGN_DATE","INJURIES")
+
+#plot(tmEventAg$BGN_DATE,  (tmEventAg$FATALITIES), type = "h", xlab = "Event Date", ylab = "Fatalities")
+tmEventFtlInj <- merge(tmEventAg,tmEventInj, by = "BGN_DATE")
+#plot(tmEventFtlInj$BGN_DATE, log(tmEventFtlInj$INJURIES), col = "green", type = "p",pch = 20
+#     , xlab = "Event Date", ylab = "Qty of People")
+#lines(tmEventFtlInj$BGN_DATE,log(tmEventFtlInj$FATALITIES), col = "red",type = "p")
+  dev.new(width=10, height=10)
+  par(mfrow=c(2,2))
+  #par(mfcol=c(2,1))
+  plot(tmEventAg$BGN_DATE[order(tmEventAg$BGN_DATE)],  log(tmEventAg$FATALITIES), type = "p", col = "dodger blue",pch = 20 ,xlab = "Event Date", ylab = "Fatalities")
+   plot(tmEventAg$BGN_DATE[order(tmEventAg$BGN_DATE)], log(tmEventFtlInj$INJURIES), col = "green", type = "l",pch = 20
+       , xlab = "Event Date", ylab = "Qty of People")
+      lines(tmEventAg$BGN_DATE[order(tmEventAg$BGN_DATE)],log(tmEventFtlInj$FATALITIES), col = "red",type = "p", pch = 20)
+  plot(tmEventAg$BGN_DATE[order(tmEventAg$BGN_DATE)],  (tmEventInj$INJURIES), type = "p", col = "dodger blue",pch = 20, xlab = "Event Date", ylab = "Injuries")
+mtext("Fatalities and Injuries", side=3, outer=TRUE, line=-1, col = "blue") 
+#dev.off()
+
+tmEventFtlInj[order(tmEventFtlInj$BGN_DATE, decreasing = TRUE),]
+```
+
+
+```{r echo=TRUE}
+BGN_DATEP <- as.POSIXct(unlist(tmEventFtlInj$BGN_DATE), tz = "GMT")
+BGN_MONTH <- strftime(BGN_DATEP, "%m")
+BGN_YEAR <- strftime(BGN_DATEP, "%Y")
+BGN_DATES <- data.frame(BGN_MONTH,BGN_YEAR,BGN_DATEP)
+tmeventSeries <- cbind(BGN_DATES ,tmEventFtlInj)
+
+tmSeriesAgF <- aggregate(FATALITIES~ BGN_MONTH+ BGN_YEAR, tmeventSeries, FUN = sum)
+tmSeriesAgI <- aggregate(INJURIES~ BGN_MONTH+ BGN_YEAR, tmeventSeries, FUN = sum)
+tmSeriesAg <- merge(tmSeriesAgF,tmSeriesAgI, by = c("BGN_MONTH", "BGN_YEAR"))
+tmSeriesAg$MOYR <- as.POSIXct(paste(tmSeriesAg$BGN_YEAR, tmSeriesAg$BGN_MONTH, "01", sep = "-"))
+#plot(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)], tmSeriesAg$INJURIES, col = "green", type = "l",pch = 20
+#       , xlab = "Event Date", ylab = "Qty of People")
+# lines(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)],tmSeriesAg$FATALITIES, col = "red",type = "l", pch = 20)
+ 
+ #par(mfrow=c(1,2), mai = c(.5, .5, 0.2, 0.1))
+ par(mfrow=c(2,1), mai = c(0.80, 0.80, 0.2, 0.1))
+ plot(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)], tmSeriesAg$INJURIES, col = "dodger blue", type = "l",pch = 20
+       , xlab = "", ylab = "Number Injuries")
+ plot(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)], tmSeriesAg$FATALITIES, col = "green", type = "l",pch = 20
+       , xlab = "Event Date", ylab = "Number Fatalities")
+ #plot(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)], tmSeriesAg$INJURIES, col = "green", type = "l",pch = 20
+#       , xlab = "Event Date", ylab = "Injuries and Fatalities")
+# lines(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)],tmSeriesAg$FATALITIES, col = "red",type = "l", pch = 20)
+ 
+ mtext("Fatalities and Injuries", side=3, outer=TRUE, line=-1, col = "blue",font = 2) 
 
 ```
+
 
 ### Source Citation and Resource:
     NATIONAL WEATHER SERVICE INSTRUCTION  10-1605 

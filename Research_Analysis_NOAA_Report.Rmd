@@ -189,7 +189,7 @@ g2 <- ggplot(pl, aes(x=reorder(EVTYPE, -TOTLDMG), y=format(TOTLDMG, scientific =
 ```
 This chart shows the top 10 most economically damaging events, from most to least. The Flood is the most costly and the Ice Storm is the least.
 
-```{r timeseries, include= TRUE, echo= TRUE}
+```{r include= FALSE, echo= FALSE}
 
 tmEvent <- repdata[which(is.na(repdata$BGN_DATE) == FALSE),]
 tmEvent$BGN_DATE <-  as.Date(tmEvent$BGN_DATE, format = "%m/%d/%Y")
@@ -222,7 +222,7 @@ tmEventFtlInj[order(tmEventFtlInj$BGN_DATE, decreasing = TRUE),]
 ```
 
 
-```{r echo=TRUE}
+```{r timeseries, include= TRUE,echo=TRUE}
 BGN_DATEP <- as.POSIXct(unlist(tmEventFtlInj$BGN_DATE), tz = "GMT")
 BGN_MONTH <- strftime(BGN_DATEP, "%m")
 BGN_YEAR <- strftime(BGN_DATEP, "%Y")

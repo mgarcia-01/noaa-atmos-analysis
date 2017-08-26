@@ -233,16 +233,21 @@ tmSeriesAgF <- aggregate(FATALITIES~ BGN_MONTH+ BGN_YEAR, tmeventSeries, FUN = s
 tmSeriesAgI <- aggregate(INJURIES~ BGN_MONTH+ BGN_YEAR, tmeventSeries, FUN = sum)
 tmSeriesAg <- merge(tmSeriesAgF,tmSeriesAgI, by = c("BGN_MONTH", "BGN_YEAR"))
 tmSeriesAg$MOYR <- as.POSIXct(paste(tmSeriesAg$BGN_YEAR, tmSeriesAg$BGN_MONTH, "01", sep = "-"))
-plot(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)], tmSeriesAg$INJURIES, col = "green", type = "l",pch = 20
-       , xlab = "Event Date", ylab = "Qty of People")
- lines(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)],tmSeriesAg$FATALITIES, col = "red",type = "l", pch = 20)
+#plot(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)], tmSeriesAg$INJURIES, col = "green", type = "l",pch = 20
+#       , xlab = "Event Date", ylab = "Qty of People")
+# lines(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)],tmSeriesAg$FATALITIES, col = "red",type = "l", pch = 20)
  
- par(mfrow=c(2,1), mai = c(.5, .5, 0.2, 0.1))
- plot(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)], tmSeriesAg$INJURIES, col = "green", type = "l",pch = 20
-       , xlab = "Event Date", ylab = "Qty of People")
- plot(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)], tmSeriesAg$FATALITIES, col = "dodger blue", type = "l",pch = 20
-       , xlab = "Event Date", ylab = "Qty of People")
- mtext("Fatalities and Injuries", side=3, outer=TRUE, line=-1, col = "blue") 
+ #par(mfrow=c(1,2), mai = c(.5, .5, 0.2, 0.1))
+ par(mfrow=c(2,1), mai = c(0.80, 0.80, 0.2, 0.1))
+ plot(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)], tmSeriesAg$INJURIES, col = "dodger blue", type = "l",pch = 20
+       , xlab = "", ylab = "Number Injuries")
+ plot(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)], tmSeriesAg$FATALITIES, col = "green", type = "l",pch = 20
+       , xlab = "Event Date", ylab = "Number Fatalities")
+ #plot(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)], tmSeriesAg$INJURIES, col = "green", type = "l",pch = 20
+#       , xlab = "Event Date", ylab = "Injuries and Fatalities")
+# lines(tmSeriesAg$MOYR[order(tmSeriesAg$MOYR)],tmSeriesAg$FATALITIES, col = "red",type = "l", pch = 20)
+ 
+ mtext("Fatalities and Injuries", side=3, outer=TRUE, line=-1, col = "blue",font = 2) 
 
 ```
 

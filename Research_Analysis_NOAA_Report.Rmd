@@ -1,5 +1,5 @@
 ---
-title: "Research Analysis for NOAA Weather"
+title: "Analysis on Weather and Economic Impact"
 output:
   html_notebook: default
   html_document: default
@@ -12,7 +12,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Storm Research Analysis {.tabset .tabset-fade .tabset-pills}
+## Analysis on Weather and Economic Impact {.tabset .tabset-fade .tabset-pills}
 ### NOTICE
     Analysis on Weather and Economic Impact
     Copyright © 2017 Michael Garcia. All Rights Reserved.

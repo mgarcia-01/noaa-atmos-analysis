@@ -13,12 +13,25 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Storm Research Analysis {.tabset .tabset-fade .tabset-pills}
+### NOTICE
+    Analysis on Weather and Economic Impact
+    Copyright © 2017 Michael Garcia. All Rights Reserved.
+    Inquiries: mgar_datascience at protonmail.com
+    
+    This program is distributed  WITHOUT ANY WARRANTY; without even the 
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+    PURPOSE.
+    
+    "ggplot2"" is used under GNU GENERAL PUBLIC LICENSE Version 2 license.
+    See https://cran.r-project.org/web/licenses/GPL-2 for full text.
+    H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2009.
+    
 
 ### Main Report Section
 
-##### Synopsis Revised
+##### Synopsis
 
-This report utilizes NOAA storm weather data to explain weather patterns. The weather in research are disastrous conditions, and the attributes of the weather. The analysis will also deliver results on the events that directly may have resulted from the unusual weather. The analysis reveals that the most frequent events are not necessarily the most damaging. Events that are most economically costly, are not the events that cause the most damage to population health. 
+This report utilizes NOAA storm weather data to explain weather patterns. The weather in research are disastrous conditions, and the attributes of the weather. The analysis will also seek to answer cost and damage to the economy and people. The analysis reveals that the most frequent events are not necessarily the most damaging. Events that are most economically costly, are not the events that cause the most damage to population health. 
 
 Tornadoe, Heat, and Flash Floods are the top  3 causes of most fatalities. Hail, thunderstorms windws and tornadoes are the top 3 most frequent. Flood, Hurricane, and tornadoes are the top 3 most costly events.
 
@@ -38,7 +51,9 @@ download.file(webURL,destfile = destURL)
 repdata <- read.csv(destURL)
 ```
 
-##### Summary
+
+#### Results
+
 
 Summary of Each Variable.
 
@@ -50,7 +65,9 @@ Summary of Each Variable.
 
 ##### Events most harmful to population health
 
-```{r event types,include =  TRUE, echo = TRUE}
+This chunk transforms and prepares the data to sort by the frequency or quantity of events. 
+
+```{r eventypes,include =  TRUE, echo = TRUE}
 eventFreq <- aggregate(repdata$EVTYPE, list(repdata$EVTYPE), length)
 names(eventFreq) <- c("EVTYPE","Qty")
 eventFatal <- aggregate(repdata$FATALITIES, list(repdata$EVTYPE), sum)
@@ -64,7 +81,10 @@ eventDamag <- eventDamag[order(eventDamag$"Qty", decreasing = TRUE),]
 eventDamag
 #plot(eventFreq$EVTYPE,eventFreq$Qty,type ="h")
 ```
-This table shows the event types ordered by frequency. This depicts that the most frequent types `r eventDamag[1,1]` at `r eventDamag[1,2]` and `r eventDamag[nrow(eventDamag),1]` at `r eventDamag[nrow(eventDamag),2]` are not the most frequent  
+
+This table shows the event types ordered by frequency. This depicts that the most frequent types `r eventDamag[1,1]` at `r eventDamag[1,2]` and `r eventDamag[nrow(eventDamag),1]` at `r eventDamag[nrow(eventDamag),2]` are not the most frequent.
+
+This table sorts all the events by the total deaths by event type.
 
 ```{r injury_fatalities, include= TRUE,echo= TRUE}
 ftl <- eventDamag[order(eventDamag$FATALITIES, decreasing = TRUE),]
@@ -73,45 +93,19 @@ ftl
 ```
 `r ftl[1,1]` event is the top event causing fatalities at `r ftl[1,3]` fatalities. `r ftl[nrow(ftl),1]` is the event with the least number of fatalities at `r ftl[nrow(ftl),3]`
 
-```{r ftl_plot, include=FALSE, echo=FALSE}
-tftl <- head(ftl[order(ftl$FATALITIES, decreasing = TRUE),],10)
-tftl$FATALITIES <- as.numeric(tftl$FATALITIES)
-tftl$EVTYPE <- factor(tftl$EVTYPE)
-#plot(pl$EVTYPE,(pl$TOTLDMG/1000), type = "h", xlab = "EVTYPE", ylab = "Total Damage Amount")
-
-library(ggplot2)
-ggplot(tftl, aes(x=reorder(EVTYPE, -FATALITIES), y=format(FATALITIES, scientific = FALSE), group=1)) + geom_bar(stat = "identity", fill = "#0099FF")+ 
-            theme(axis.text.x = element_text(angle = 45, hjust = 1)
-                               ,axis.title.x = element_text(face="bold", size=12)
-                               ,legend.position="none")+
-                                    labs(x="Event Type",y="FATALITIES") 
-```
-
  
 ```{r include= FALSE, echo=FALSE}
 ###  This bar graph displays the top 10 events that cause the most fatalities.
 ```
 
-```{r damageqty, include = TRUE, echo = TRUE}
-dm <- head(eventDamag[order(eventDamag$Qty, decreasing = TRUE),],10)
-dm$Qty <- as.numeric(dm$Qty)
-dm$EVTYPE <- factor(dm$EVTYPE)
-#plot(pl$EVTYPE,(pl$TOTLDMG/1000), type = "h", xlab = "EVTYPE", ylab = "Total Damage Amount")
 
-library(ggplot2)
-g1 <- ggplot(dm, aes(x=reorder(EVTYPE, -Qty), y=format(Qty, scientific = FALSE), group=1)) + geom_bar(stat = "identity", fill = "#0099FF")+ 
-            theme(axis.text.x = element_text(angle = 45, hjust = 1)
-                               ,axis.title.x = element_text(face="bold", size=12)
-                               ,legend.position="none")+
-                                    labs(x="Event Type",y="Event Frequency") 
-```
 This table displayes the top ten events that are most frequent. `r head(dm$EVTYPE,1)` is the event that occurs the most at `r format(head(dm$Qty,1), scientific = FALSE)` number of events. `r dm[10,1]` is the least top frequent occuring event coming at `r format(dm[10,2], scientific = FALSE)` number of events.
 
 
 
 #####  Events have the greatest economic consequences
 
-
+This chunk tansforms the abbreviated Property Damage Cost and Crop Damage Cost to full dollar amounts. It uses the given Letter for how many zeros it will use. This then displays a table sorted by Total Damage Cost from Greatest to Least. This data frame is used farther down in code snippers.
 ```{r event histogram,include =  TRUE, echo = TRUE}
 #a <- head(eventDamag[order(eventDamag$"Qty", decreasing = TRUE),],5)
 #plot(a$EVTYPE, as.numeric(a$Qty/1000), type = "h")
@@ -172,22 +166,11 @@ This table is sorted by the total property damage cost from most to least and re
 
 
 
-```{r damageplot, include= TRUE, echo = TRUE}
-pl <- head(eventDmgPrp[order(eventDmgPrp$TOTLDMG, decreasing = TRUE),],10)
-pl$TOTLDMG <- as.numeric(pl$TOTLDMG)
-pl$EVTYPE <- factor(pl$EVTYPE)
-#plot(pl$EVTYPE,(pl$TOTLDMG/1000), type = "h", xlab = "EVTYPE", ylab = "Total Damage Amount")
 
-library(ggplot2)
-g2 <- ggplot(pl, aes(x=reorder(EVTYPE, -TOTLDMG), y=format(TOTLDMG, scientific = FALSE), group=1)) + geom_bar(stat = "identity", fill = "#0099FF")+ 
-            theme(axis.text.x = element_text(angle = 45, hjust = 1)
-                               ,axis.title.x = element_text(face="bold", size=12)
-                               ,legend.position="none")+
-                                    labs(x="Event Type",y="Damage Amount (000's)") 
-                                    
-# plot(activityWkend$interval, activityWkend$avgSteps, type = "l",xlab = "interval", ylab = "WkEnd Avg Steps")
-```
+
 This chart shows the top 10 most economically damaging events, from most to least. The Flood is the most costly and the Ice Storm is the least.
+
+This chunk aggregates the results for plotting by injury and fatalities into a panel plot. The final data frame in this chunk is used for the codes in time plots further down.
 
 ```{r include= FALSE, echo= FALSE}
 
@@ -204,24 +187,13 @@ colnames(tmEventInj) <- c("BGN_DATE","INJURIES")
 
 #plot(tmEventAg$BGN_DATE,  (tmEventAg$FATALITIES), type = "h", xlab = "Event Date", ylab = "Fatalities")
 tmEventFtlInj <- merge(tmEventAg,tmEventInj, by = "BGN_DATE")
-#plot(tmEventFtlInj$BGN_DATE, log(tmEventFtlInj$INJURIES), col = "green", type = "p",pch = 20
-#     , xlab = "Event Date", ylab = "Qty of People")
-#lines(tmEventFtlInj$BGN_DATE,log(tmEventFtlInj$FATALITIES), col = "red",type = "p")
-  dev.new(width=10, height=10)
-  par(mfrow=c(2,2))
-  #par(mfcol=c(2,1))
-  plot(tmEventAg$BGN_DATE[order(tmEventAg$BGN_DATE)],  log(tmEventAg$FATALITIES), type = "p", col = "dodger blue",pch = 20 ,xlab = "Event Date", ylab = "Fatalities")
-   plot(tmEventAg$BGN_DATE[order(tmEventAg$BGN_DATE)], log(tmEventFtlInj$INJURIES), col = "green", type = "l",pch = 20
-       , xlab = "Event Date", ylab = "Qty of People")
-      lines(tmEventAg$BGN_DATE[order(tmEventAg$BGN_DATE)],log(tmEventFtlInj$FATALITIES), col = "red",type = "p", pch = 20)
-  plot(tmEventAg$BGN_DATE[order(tmEventAg$BGN_DATE)],  (tmEventInj$INJURIES), type = "p", col = "dodger blue",pch = 20, xlab = "Event Date", ylab = "Injuries")
-mtext("Fatalities and Injuries", side=3, outer=TRUE, line=-1, col = "blue") 
-#dev.off()
 
-tmEventFtlInj[order(tmEventFtlInj$BGN_DATE, decreasing = TRUE),]
 ```
 
 
+#### Results
+
+This chunk prepares the data to panel plot Fatalities and Injuries by Month and Year.
 ```{r timeseries, include= TRUE,echo=TRUE}
 BGN_DATEP <- as.POSIXct(unlist(tmEventFtlInj$BGN_DATE), tz = "GMT")
 BGN_MONTH <- strftime(BGN_DATEP, "%m")
@@ -252,6 +224,52 @@ tmSeriesAg$MOYR <- as.POSIXct(paste(tmSeriesAg$BGN_YEAR, tmSeriesAg$BGN_MONTH, "
 ```
 
 
+This plot presents top 10 costly events.
+```{r damageplot, include= TRUE, echo = TRUE}
+pl <- head(eventDmgPrp[order(eventDmgPrp$TOTLDMG, decreasing = TRUE),],10)
+pl$TOTLDMG <- as.numeric(pl$TOTLDMG)
+pl$EVTYPE <- factor(pl$EVTYPE)
+#plot(pl$EVTYPE,(pl$TOTLDMG/1000), type = "h", xlab = "EVTYPE", ylab = "Total Damage Amount")
+
+library(ggplot2)
+ ggplot(pl, aes(x=reorder(EVTYPE, -TOTLDMG), y=format(TOTLDMG, scientific = FALSE), group=1)) +
+          ggtitle("Top 10 Costly Events")+
+          geom_bar(stat = "identity", fill = "#0099FF")+ 
+            theme(axis.text.x = element_text(angle = 45, hjust = 1)
+                               ,axis.title.x = element_text(face="bold", size=12)
+                               ,legend.position="none")+ 
+                                    labs(x="Event Type",y="Damage Amount (000's)") 
+                                    
+# plot(activityWkend$interval, activityWkend$avgSteps, type = "l",xlab = "interval", ylab = "WkEnd Avg Steps")
+```
+
+
+This plot displays the top 10 occuring events 
+```{r damageqty, include = TRUE, echo = TRUE}
+dm <- head(eventDamag[order(eventDamag$Qty, decreasing = TRUE),],10)
+dm$Qty <- as.numeric(dm$Qty)
+dm$EVTYPE <- factor(dm$EVTYPE)
+#plot(pl$EVTYPE,(pl$TOTLDMG/1000), type = "h", xlab = "EVTYPE", ylab = "Total Damage Amount")
+
+library(ggplot2)
+ggplot(dm, aes(x=reorder(EVTYPE, -Qty), y=format(Qty, scientific = FALSE), group=1)) + 
+            ggtitle("Top 10 Frequent Events")+
+            geom_bar(stat = "identity", fill = "#0099FF")+ 
+            theme(axis.text.x = element_text(angle = 45, hjust = 1)
+                               ,axis.title.x = element_text(face="bold", size=12)
+                               ,legend.position="none")+
+                                    labs(x="Event Type",y="Event Frequency") 
+```
+
+
+This depicts that the most frequent types `r eventDamag[1,1]` at `r eventDamag[1,2]` and `r eventDamag[nrow(eventDamag),1]` at `r eventDamag[nrow(eventDamag),2]` are not the most frequent.
+
+
+`r ftl[1,1]` event is the top event causing fatalities at `r ftl[1,3]` fatalities. `r ftl[nrow(ftl),1]` is the event with the least number of fatalities at `r ftl[nrow(ftl),3]`
+
+This table displayes the top ten events that are most frequent. `r head(dm$EVTYPE,1)` is the event that occurs the most at `r format(head(dm$Qty,1), scientific = FALSE)` number of events. `r dm[10,1]` is the least top frequent occuring event coming at `r format(dm[10,2], scientific = FALSE)` number of events.
+
+
 ### Source Citation and Resource:
     NATIONAL WEATHER SERVICE INSTRUCTION  10-1605 
     AUGUST 17, 2007 
@@ -263,14 +281,4 @@ tmSeriesAg$MOYR <- as.POSIXct(paste(tmSeriesAg$BGN_YEAR, tmSeriesAg$BGN_MONTH, "
     Storm Data Documentation: https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf
     FAQ: https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf
     
-
-    
-### License and Copyright Notice
-    Self published Research Analysis for NOAA Weather
-    Copyright © 2017 Michael Garcia. All Rights Reserved.
-    Inquiries: mgar_datascience@protonmail.com
-    
-    This program is distributed  WITHOUT ANY WARRANTY; without even the 
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-    PURPOSE.  
 ##

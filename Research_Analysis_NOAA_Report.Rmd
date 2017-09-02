@@ -1,10 +1,11 @@
 ---
 title: "Analysis on Weather and Economic Impact"
 output:
+  pdf_document: default
   html_notebook: default
-  html_document: default
   md_document:
     variant: markdown_github
+  html_document: default
 ---
 
 
